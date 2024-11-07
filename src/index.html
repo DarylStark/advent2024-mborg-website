@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Mborg</title>
+        <link
+            href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+            rel="stylesheet"
+        />
+    </head>
+    <body class="bg-black text-white">
+        <form onsubmit="redirectToPage(event)">
+            <div class="container mx-auto">
+                <h1 class="text-4xl font-bold text-center mt-10">
+                    Licensering
+                </h1>
+                <p class="text-center mt-4">
+                    Vul uw serienummer in om de licentiecodes te verkrijgen:
+                </p>
+                <div
+                    class="text-center text-red-500 font-bold hidden mt-6"
+                    id="wrong"
+                >
+                    Incorrect serienummer.
+                </div>
+                <div
+                    class="text-center text-green-500 font-bold hidden mt-6"
+                    id="correct"
+                >
+                    Doorsturen ...
+                </div>
+                <div class="flex flex-col items-center mt-10">
+                    <input
+                        type="text"
+                        id="serialNumber"
+                        class="w-1/2 p-2 rounded-lg mb-8 text-black font-mono text-center"
+                        placeholder="Serial Number"
+                        autofocus
+                    />
+                    <button
+                        type="submit"
+                        class="bg-blue-500 p-4 pl-8 pr-8 rounded-lg"
+                    >
+                        Verzonden
+                    </button>
+                </div>
+            </div>
+        </form>
+        <script>
+            function redirectToPage(event) {
+                event.preventDefault();
+                const serialNumber = document
+                    .getElementById("serialNumber")
+                    .value.toLowerCase();
+                const url = `${serialNumber}.html`;
+
+                const inputElement = document.getElementById("serialNumber");
+                const wrongElement = document.getElementById("wrong");
+                const correctElement = document.getElementById("correct");
+                inputElement.disabled = true;
+
+                fetch(url, { method: "HEAD" })
+                    .then((response) => {
+                        if (response.ok) {
+                            wrongElement.classList.add("hidden");
+                            correctElement.classList.remove("hidden");
+                            window.location.href = url;
+                        } else {
+                            wrongElement.classList.remove("hidden");
+                            inputElement.disabled = false;
+                            inputElement.focus();
+                            inputElement.select();
+                        }
+                    })
+                    .catch((error) => {
+                        console.error("Error:", error);
+                        wrongElement.classList.remove("hidden");
+                        inputElement.disabled = true;
+                        inputElement.focus();
+                        inputElement.select();
+                    });
+            }
+        </script>
+    </body>
+</html>
